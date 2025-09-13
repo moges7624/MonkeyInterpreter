@@ -7,6 +7,7 @@ import (
 
 	"github.com/moges7624/MonkeyInterpreter/evaluator"
 	"github.com/moges7624/MonkeyInterpreter/lexer"
+	"github.com/moges7624/MonkeyInterpreter/object"
 	"github.com/moges7624/MonkeyInterpreter/parser"
 	"github.com/moges7624/MonkeyInterpreter/token"
 )
@@ -77,6 +78,7 @@ func StartParse(in io.Reader, out io.Writer) {
 func StartEvaluate(in io.Reader, out io.Writer) {
   io.WriteString(out, MONKEY_FACE)
   scanner := bufio.NewScanner(in)
+  env := object.NewEnvironment()
 
   for  {
     fmt.Fprintf(out, PROMPT)
@@ -95,7 +97,7 @@ func StartEvaluate(in io.Reader, out io.Writer) {
       continue
     }
 
-    evaluated := evaluator.Eval(program)
+    evaluated := evaluator.Eval(program, env)
     if evaluated != nil {
       io.WriteString(out, evaluated.Inspect())
       io.WriteString(out, "\n")
