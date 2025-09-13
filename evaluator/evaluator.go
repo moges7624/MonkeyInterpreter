@@ -48,6 +48,18 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
   return result
 }
 
+func evalIdentifier(
+  node *ast.Identifier, 
+  env *object.Environment,
+) object.Object {
+  val, ok := env.Get(node.Value)
+  if !ok {
+    return newError("identifier not found: %s",  node.Value)
+  }
+
+  return val
+}
+
 func evalBangOperatorExpression(right object.Object) object.Object {
   switch right {
   case TRUE:
@@ -220,6 +232,17 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
       return val
     }
     return &object.ReturnValue{Value: val}
+
+  case *ast.LetStatement:
+    val := Eval(node.Value, env)
+    if isError(val) {
+      return val
+    }
+  env.Set(node.Name.Value, val)
+
+  case *ast.Identifier:
+  return evalIdentifier(node, env)
+
 
   case *ast.IntegerLiteral:
     return &object.Integer{Value: node.Value}
