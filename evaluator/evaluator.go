@@ -246,6 +246,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
   case *ast.Program:
     return evalProgram(node, env)
 
+  case *ast.StringLiteral:
+    return &object.String{Value: node.Value}
+
   case *ast.ExpressionStatement:
     return Eval(node.Expression, env)
 
@@ -302,7 +305,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
       return args[0]
     }
 
-  return applyFunction(function, args)
+    return applyFunction(function, args)
 
   case *ast.FunctionLiteral:
     params := node.Parameters
