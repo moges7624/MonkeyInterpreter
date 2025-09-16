@@ -27,6 +27,8 @@ const (
   GT = ">"
   EQ = "=="
   NOT_EQ = "!="
+  GT_OR_EQ = ">="
+  LT_OR_EQ = "<="
 
   // Delimiters
   COMMA = ","
